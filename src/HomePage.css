@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #237FEC; /* Add your preferred background color */
+  }
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+      }
+  nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #237FEC;
+    color: white;
+    
+  }
+  .brand {
+    font-size: 29px; /* Add your preferred font size for 'BioBallot' */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Add your preferred font family */
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+  nav ul{
+    list-style: none;
+    display: flex;
+  }
+  nav li {
+    margin-right: 20px;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: white; /* Add your preferred text color */
+    font-weight: bold;
+  }
+ 
+  .description {
+    /*flex: 2;
+    max-width: 600px;
+    margin-right: 20px;*/
+    text-align: center;
+    max-width: 600px;
+    color: white;
+  }
+  .description h2 {
+    font-size: 28px; /* Add your preferred font size */
+    text-align: center;
+    color: white; /* Add your preferred text color */
+    margin-bottom: 10px; /* Add spacing at the bottom if needed */
+  }
+  .image img {
+    max-width: 300px; /* Ensure the image fills its container */
+    height: auto;
+    margin-bottom: 20px; /* Add spacing between image and login section */
+  }
+  
+  .buttons-section {
+    text-align: center;
+    margin-bottom: 20px; /* Add spacing between buttons and create account link */
+  }
+  
+  .login-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: white;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .login-button a {
+    text-decoration: none;
+    color: #423C5F;
+    
+  }
+  
+  .create-account-link {
+    font-size: 14px;
+    color: white;
+    
+  }
+  
+  .create-account-link a {
+    text-decoration: underline;
+    color: white;
+  }
+ /* .links {
+    display: flex;
+    align-items: center;
+    margin-right: 100px;
+    margin: 20px;
+  }
+  
+  .links a {
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .links img {
+    max-width: 150px;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 35px;
+  }*/

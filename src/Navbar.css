@@ -1,0 +1,33 @@
+/* src/Navbar.css */
+nav {
+    background-color: #237FEC;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .brand {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+  }
+  
+  ul {
+    list-style: none;
+    display: flex;
+  }
+  
+  ul li {
+    margin-left: 20px;
+  }
+  
+  ul li a {
+    text-decoration: none;
+    color: white;
+  }
+  
+  /* Add more styles as needed */
+  
