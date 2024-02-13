@@ -1,0 +1,44 @@
+.fingerprint-scanner-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .scanner-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .scanner-message {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .fingerprint-image {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  .scan-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .scan-button.scanning {
+    background-color: #dc3545; /* Change button color when scanning */
+  }
+  
+  .scan-button:hover {
+    background-color: #0056b3;
+  }
+  

@@ -1,24 +1,12 @@
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #237FEC; /* Add your preferred background color */
-  }
+
 .content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
-      }
-  nav{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
     background-color: #237FEC;
-    color: white;
-    
-  }
+      }
   .brand {
     font-size: 29px; /* Add your preferred font size for 'BioBallot' */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Add your preferred font family */

@@ -6,6 +6,7 @@ import HomePage from './HomePage';
 import AboutPage from './AboutPage';
 import VoterLoginPage from './VoterLoginPage';
 import AdminLoginPage from './AdminLoginPage';
+import FingerprintScanner from './FingerprintScanner';
 function App() {
   return (
       <Router>
@@ -14,6 +15,7 @@ function App() {
         <Route path="/about" element={<AboutPage />}/>
         <Route path="/voter-login" element={<VoterLoginPage />} />
         <Route path="/admin-login" element={<AdminLoginPage />} />
+        <Route path="/scanner" element={<FingerprintScanner />} />
         </Routes>
       </Router>
   );
