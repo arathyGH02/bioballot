@@ -1,0 +1,66 @@
+
+
+
+login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    margin-top: 20px;
+  }
+  
+  .login-form {
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 30px;
+    text-align: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
+  
+  form {
+    width: 300px; /* Adjust the width as needed */
+    margin-top: 20px;
+    margin-left: auto; /* Center the form horizontally */
+    margin-right: auto;
+    
+  }
+  
+  div {
+    margin-bottom: 25px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 21px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 21px;
+    border-radius: 5px;
+    border: 1px solid #ccc; /* Set border color to a lighter shade */
+}
+  
+  
+  .button1 {
+    display: block; /* Make the button a block element */
+    margin: 0 auto; /* Center align the button horizontally within the block */
+    background-color:  #237FEC;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    border-radius: 15px;
+    width: 100px;
+  }
+  
+ 
+

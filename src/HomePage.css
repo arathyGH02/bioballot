@@ -4,7 +4,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 0px;
     background-color: #237FEC;
       }
   .brand {
@@ -81,24 +81,4 @@
     text-decoration: underline;
     color: white;
   }
- /* .links {
-    display: flex;
-    align-items: center;
-    margin-right: 100px;
-    margin: 20px;
-  }
-  
-  .links a {
-    margin-bottom: 10px;
-    text-decoration: none;
-    color: #333;
-  }
-  
-  .links img {
-    max-width: 150px;
-    height: auto;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-right: 35px;
-  }*/
+ 

@@ -1,0 +1,50 @@
+/* src/ElectionPage.css */
+
+.election-page-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .election-page-title {
+    color: black;
+  }
+  
+  .election-page-subtitle {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .candidates-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .candidates-table th, .candidates-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .submit-vote-button-container {
+    text-align: center;
+  }
+  
+  .submit-vote-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px; /* Adjust the margin as needed */
+  }
+  
+  .submit-vote-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }

@@ -7,6 +7,12 @@ import AboutPage from './AboutPage';
 import VoterLoginPage from './VoterLoginPage';
 import AdminLoginPage from './AdminLoginPage';
 import FingerprintScanner from './FingerprintScanner';
+import RegisterPage from './RegisterPage';
+import Admin from './Admin';
+import AddCandidate from './AddCandidate';
+import VoterDetails from './VoterDetails';
+import ElectionPage from './ElectionPage';
+
 function App() {
   return (
       <Router>
@@ -16,6 +22,11 @@ function App() {
         <Route path="/voter-login" element={<VoterLoginPage />} />
         <Route path="/admin-login" element={<AdminLoginPage />} />
         <Route path="/scanner" element={<FingerprintScanner />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/add-candidate" element={<AddCandidate />} />
+        <Route path="/voter-details" element={<VoterDetails />} />
+        <Route path="/election-page" element={<ElectionPage />} />
         </Routes>
       </Router>
   );

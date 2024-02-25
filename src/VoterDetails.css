@@ -1,0 +1,51 @@
+
+
+.voter-details-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 10px;
+    
+    border-radius: 8px;
+    background-color: #fff;
+    
+  }
+  
+  .voter-details-title {
+    color: black;
+  }
+  
+  .voter-details-content {
+    margin-top: 20px;
+  }
+  
+  .voter-details-info {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  
+  .voter-details-label {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .voter-details-loading {
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .voter-details-vote-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .voter-details-vote-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  

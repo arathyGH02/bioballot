@@ -1,0 +1,47 @@
+
+
+.registration-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .centralized-heading {
+    text-align: center;
+  }
+  
+  .registration-form {
+    display: flex;
+    justify-content: center;
+    width: 90%; /* Adjust the width as needed */
+  }
+  
+  .registration-column {
+    margin: 20px; /* Adjust the margin as needed for spacing between columns */
+  }
+  
+  input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border-radius: 5px;
+  }
+  
+  .next-button {
+    text-align: right; /* Align the button to the right */
+    margin-top: 10px;
+  }
+  
+  .button2 {
+    background-color: #d3d8d3;
+    color: #1e68c2;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 15px;
+    width: 100px;
+  }
+  
+  
