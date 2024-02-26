@@ -1,4 +1,4 @@
-// src/ElectionPage.js
+
 
 import React, { useState } from 'react';
 import './ElectionPage.css'; // You can create this CSS file for styling
