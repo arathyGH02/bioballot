@@ -24,11 +24,29 @@ const RegisterPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add any additional logic for form submission
-    // You can redirect or perform other actions here
+    try {
+      const response = await fetch('/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      if (response.ok) {
+        // Redirect to the home page
+        window.location.href = '/';
+      } else {
+        throw new Error('Failed to save data');
+      }
+    } catch (err) {
+      console.error(err);
+      // Handle error
+    }
   };
+  
 
   return (
     <div>  <Navbar />
@@ -56,8 +74,9 @@ const RegisterPage = () => {
         </div>
         </form>
         <div className="next-button">
-          <Link to="/scanner">
-            <button className='button2' type="button">Next</button>
+        <Link to="/"><button className='button2' type="submit">Save go to home page</button></Link>
+           <Link to="/scanner">
+             <button className='button2' type="button">Next</button>
           </Link>
         </div>
       
