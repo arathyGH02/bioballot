@@ -1,88 +1,123 @@
-
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './RegisterPage.css'; // Import the CSS file for styling
 import Navbar from './Navbar';
 
-const RegisterPage = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phoneNumber: '',
-    aadhaar: '',
-    age: '',
-    dob: '',
-    constituency: '',
-    password: ''
-  });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+const VoterList = () => {
+  const [voters, setVoters] = useState([]);
 
+  useEffect(() => {
+    const fetchVoters = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/register');
+        setVoters(response.data);
+      } catch (error) {
+        console.error('Failed to fetch voters:', error.message);
+      }
+    };
+
+    fetchVoters();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
     try {
-      const response = await fetch('/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-      if (response.ok) {
-        // Redirect to the home page
-        window.location.href = '/';
-      } else {
-        throw new Error('Failed to save data');
+      const response = await axios.post('http://localhost:5000/register', data);
+
+      if (response.status !== 200) {
+        throw new Error('Failed to register');
       }
-    } catch (err) {
-      console.error(err);
-      // Handle error
+
+      // Assuming the server responds with a JSON object containing a success message
+      console.log(response.data.message); // Log the success message
+    } catch (error) {
+      console.error('Registration failed:', error.message);
     }
   };
-  
 
   return (
-    <div>  <Navbar />
-
-    <div className="registration-container">
-        <h2 className="centralized-heading">New Voter Registration</h2>
-      <form className="registration-form" onSubmit={handleSubmit}>
-        <div className="registration-column">
-          <input type="text" id="name" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
-          <input type="email" id="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-          <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleChange} />
-          <input type="text" id="aadhaar" name="aadhaar" placeholder="Aadhaar" value={formData.aadhaar} onChange={handleChange} />
-          <input type="text" id="age" name="age" placeholder="Age" value={formData.age} onChange={handleChange} />
-          <input type="text" id="dob" name="dob" placeholder="Date of Birth" value={formData.dob} onChange={handleChange} />
-        </div>
-
-        <div className="registration-column">
-          
-          <input type="text" id="constituency" name="constituency" placeholder="Constituency" value={formData.constituency} onChange={handleChange} />
-          <input type="text" id="panchayath" name="panchayath" placeholder="Panchayath" value={formData.panchayath} onChange={handleChange} />
-          <input type="text" id="municipality" name="municipality" placeholder="Municipality" value={formData.municipality} onChange={handleChange} />
-          <input type="text" id="legislativeassembly" name="legislativeassembly" placeholder="Legislative Assembly" value={formData.legislativeassembly} onChange={handleChange} />
-          <input type="text" id="voterid" name="voterid" placeholder="Voter ID" value={formData.voterid} onChange={handleChange} />
-          <input type="password" id="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} />
-        </div>
+    <div>
+      <Navbar />
+      <div className="registration-container">
+        <h2>New Voter Registration</h2>
+        <form onSubmit={handleSubmit} className="registration-form">
+          <div className="registration-column">
+            <label>
+              Name:
+              <input type="text" name="name" required />
+            </label>
+            <br />
+            <label>
+              Email:
+              <input type="email" name="email" required />
+            </label>
+            <br />
+            <label>
+              Phone Number:
+              <input type="tel" name="phoneNumber" required />
+            </label>
+            <br />
+            <label>
+              Aadhaar:
+              <input type="text" name="aadhaar" required />
+            </label>
+            <br />
+            <label>
+              Age:
+              <input type="number" name="age" required />
+            </label>
+            <br />
+            <label>
+              Date of Birth:
+              <input type="date" name="dob" required />
+            </label>
+            <br />
+          </div>
+  
+          <div className="registration-column">
+            <label>
+              Constituency:
+              <input type="text" name="constituency" required />
+            </label>
+            <br />
+            <label>
+              Panchayath:
+              <input type="text" name="panchayath" />
+            </label>
+            <br />
+            <label>
+              Municipality:
+              <input type="text" name="municipality" />
+            </label>
+            <br />
+            <label>
+              Legislative Assembly:
+              <input type="text" name="legislativeassembly" required />
+            </label>
+            <br />
+            <label>
+              Voter ID:
+              <input type="text" name="voterid" required />
+            </label>
+            <br />
+            <label>
+              Password:
+              <input type="password" name="password" required />
+            </label>
+            <br />
+          </div>
+          <div>
+            <button className="button2" type="submit">Register</button>
+          </div>
         </form>
-        <div className="next-button">
-        <Link to="/"><button className='button2' type="submit">Save go to home page</button></Link>
-           <Link to="/scanner">
-             <button className='button2' type="button">Next</button>
-          </Link>
-        </div>
-      
-    </div>
+      </div>
     </div>
   );
-};
-
-export default RegisterPage;
+  }
+export default VoterList;

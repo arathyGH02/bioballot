@@ -1,142 +1,73 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const mongodb = require('mongodb');
-const collection = require("mongodb")
-//const bcrypt = require('bcrypt');
+const cors = require('cors');
 
 const app = express();
-const PORT = 5000;
 
-// Connect to the MongoDB database
-mongoose.connect('mongodb://0.0.0.0/RegistrationDB', { useNewUrlParser: true, useUnifiedTopology: true });
-
-// Define registration schema
-const registrationSchema = new mongoose.Schema({
-    name: String,
-    age: Number,
-    aadhaar: String,
-    email: String,
-    dob: Date,
-    phoneNumber: String,
-    constituency: String,
-    panchayath: { type: String, required: false },
-    municipality: { type: String, required: false },
-    legislativeassembly: String,
-    voterid: String,
-    password: String
+mongoose.connect('mongodb://0.0.0.0/RegistrationDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
-const Registration = mongoose.model('Registration', registrationSchema);
-
-/*Define fingerprint schema
-const fingerprintSchema = new mongoose.Schema({
-    userId: mongoose.Schema.Types.ObjectId,
-    image: Buffer,
-    format: String,
-    name: String,
-    password: String
+const voterSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  aadhaar: String,
+  email: String,
+  dob: Date,
+  phoneNumber: String,
+  constituency: String,
+  panchayath: { type: String, required: false },
+  municipality: { type: String, required: false },
+  legislativeassembly: String,
+  voterid: String,
+  password: String
 });
 
-const Fingerprint = mongoose.model('Fingerprint', fingerprintSchema);
+const Voter = mongoose.model('Voter', voterSchema);
 
-// Define facial image schema
-const facialImageSchema = new mongoose.Schema({
-    userId: mongoose.Schema.Types.ObjectId,
-    image: Buffer,
-    format: String,
-    name: String,
-    password: String
-});
+app.use(express.json());
+app.use(cors());
 
-const FacialImage = mongoose.model('FacialImage', facialImageSchema);
-*/
-app.use(bodyParser.json());
-
-// Register endpoint
-app.post('/register', async(req, res) => {
-    console.log('Content-Type:', req.headers['content-type']);
-    const {
-        name,
-        age,
-        aadhaar,
-        email,
-        dob,
-        phoneNumber,
-        constituency,
-        panchayath,
-        municipality,
-        legislativeassembly,
-        voterid,
-        password
-    } = req.body;
-    try{
-    const registration = new Registration({
-        name,
-        age,
-        aadhaar,
-        email,
-        dob,
-        phoneNumber,
-        constituency,
-        panchayath,
-        municipality,
-        legislativeassembly,
-        voterid,
-        password
-    });
-
-    await registration.save();
-        res.redirect('/home');
+app.post('/register', async (req, res) => {
+  try {
+    const newVoter = new Voter(req.body);
   
-   } catch (err) {
-    res.status(400).send('Registration failed: ' + err.message);
+    await newVoter.save();
+    res.status(200).json({ message: 'Voter registered successfully' });
+  } catch (error) {
+    console.error('Registration failed:', error.message);
+    res.status(500).json({ message: 'Failed to register voter' });
   }
 });
-    
 
-/* Fingerprint endpoint
-app.post('/fingerprint', (req, res) => {
-    const { userId, name, password, fingerprintImage, fingerprintFormat } = req.body;
-
-    const fingerprint = new Fingerprint({
-        userId,
-        name,
-        password,
-        image: fingerprintImage,
-        format: fingerprintFormat
-    });
-
-    fingerprint.save()
-        .then(() => {
-            res.status(201).send('Fingerprint saved');
-        })
-        .catch(err => {
-            res.status(400).send('Failed to save fingerprint: ' + err.message);
-        });
+app.get('/register', async (req, res) => {
+  try {
+    console.log('Request received from frontend');
+    const voters = await Voter.find();
+    res.status(200).json(voters);
+  } catch (error) {
+    console.error('Failed to fetch voters:', error.message);
+    res.status(500).json({ message: 'Failed to fetch voters' });
+  }
 });
 
-// Facial image endpoint
-app.post('/facial-image', (req, res) => {
-    const { userId, name, password, facialImage, facialFormat } = req.body;
+app.post('/api/login', (req, res) => {
+  const { username, aadhaarNumber, password } = req.body;
 
-    const facialImageDoc = new FacialImage({
-        userId,
-        name,
-        password,
-        image: facialImage,
-        format: facialFormat
-    });
+  // Assuming you have a function to validate the login credentials
+  const isValid = validateLoginCredentials(username, aadhaarNumber, password);
 
-    facialImageDoc.save()
-        .then(() => {
-            res.status(201).send('Facial image saved');
-        })
-        .catch(err => {
-            res.status(400).send('Failed to save facial image: ' + err.message);
-        });
+  if (isValid) {
+    // If the login credentials are valid, return a success message
+    res.json({ message: 'Login successful' });
+  } else {
+    // If the login credentials are invalid, return an error message
+    res.status(401).json({ message: 'Invalid username or password' });
+  }
 });
-*/
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+
+
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
