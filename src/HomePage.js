@@ -6,9 +6,9 @@ const HomePage = () => {
     return(
         <div>
             <Navbar /> {/* Use the Navbar component */}
-      <div className='content'>
-        {/* Rest of the content */}
-      </div>
+      {/* <div className='content'>
+         Rest of the content 
+      </div> */}
 
             <div className='content'>
                 <div className='description'>
