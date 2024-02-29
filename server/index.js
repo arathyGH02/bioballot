@@ -52,22 +52,20 @@ app.get('/register', async (req, res) => {
   }
 });
 
-app.post('/api/login', (req, res) => {
+app.post('/voter-login', async (req, res) => {
   const { username, aadhaarNumber, password } = req.body;
-
-  // Assuming you have a function to validate the login credentials
-  const isValid = validateLoginCredentials(username, aadhaarNumber, password);
-
-  if (isValid) {
-    // If the login credentials are valid, return a success message
-    res.json({ message: 'Login successful' });
-  } else {
-    // If the login credentials are invalid, return an error message
-    res.status(401).json({ message: 'Invalid username or password' });
+  try {
+    const voter = await Voter.findOne({ name: username, aadhaar: aadhaarNumber, password: password });
+    if (voter) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(401).json({ success: false });
+    }
+  } catch (error) {
+    console.error('Login failed:', error.message);
+    res.status(500).json({ message: 'Failed to login' });
   }
 });
-
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

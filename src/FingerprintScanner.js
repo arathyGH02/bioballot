@@ -35,6 +35,8 @@ const FingerprintScanner = () => {
         <button className={`scan-button ${scanning ? 'scanning' : ''}`} onClick={handleScan} disabled={scanning}>
           {scanning ? "Scanning..." : "Scan Fingerprint"}
         </button>
+        <br></br>
+        <button className={`scan-button ${scanning ? 'scanning' : ''}`}>NEXT</button>
         <div ref={scannerRef}></div>
       </div>
     </div>

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import Navbar from './Navbar';
-
+import axios from 'axios'; // Import axios for HTTP requests
 import './VoterLoginPage.css';
 
 const VoterLoginPage = () => {
   const [username, setUsername] = useState('');
   const [aadhaarNumber, setAadhaarNumber] = useState('');
   const [password, setPassword] = useState('');
- 
+  const [loginError, setLoginError] = useState('');
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -25,26 +25,23 @@ const VoterLoginPage = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, aadhaarNumber, password }),
+      const response = await axios.post('http://localhost:5000/voter-login', {
+        username,
+        aadhaarNumber,
+        password,
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Login successful, handle the response
-       console.log("successful")
+      console.log(response.data)
+      if (response.data.success) {
+        // Login successful, redirect or show success message
+        console.log('Login successful');
+        console.log(response.data)
+        window.alert('Login successful');
       } else {
-        // Login failed, handle the error
-        console.log("error")
+        setLoginError('Invalid credentials');
       }
     } catch (error) {
-      // Handle network or other errors
-      console.log("error");
+      console.error('Login failed:', error.message);
+      setLoginError('Login failed. Please try again.');
     }
   };
 
@@ -55,7 +52,7 @@ const VoterLoginPage = () => {
         <h2>Voter Login</h2>
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Name</label>
             <input
               type="text"
               id="username"
@@ -81,6 +78,7 @@ const VoterLoginPage = () => {
               onChange={handlePasswordChange}
             />
           </div>
+          {loginError && <p className="error-message">{loginError}</p>}
           <button className='button1' type="submit">Login</button>
         </form>
       </div>

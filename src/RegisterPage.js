@@ -13,6 +13,7 @@ const VoterList = () => {
       try {
         const response = await axios.get('http://localhost:5000/register');
         setVoters(response.data);
+       
       } catch (error) {
         console.error('Failed to fetch voters:', error.message);
       }
@@ -36,6 +37,7 @@ const VoterList = () => {
 
       // Assuming the server responds with a JSON object containing a success message
       console.log(response.data.message); // Log the success message
+      window.alert(response.data.message);
     } catch (error) {
       console.error('Registration failed:', error.message);
     }
@@ -114,6 +116,8 @@ const VoterList = () => {
           </div>
           <div>
             <button className="button2" type="submit">Register</button>
+            <br></br>
+            <Link to="/Scanner" className="button2">NEXT</Link>
           </div>
         </form>
       </div>
