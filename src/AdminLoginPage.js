@@ -1,13 +1,17 @@
 // src/AdminLoginPage.js
+import { useNavigate } from "react-router-dom";
 import React, { useState } from 'react';
 import Navbar from './Navbar';
- import './AdminLoginPage.css'; 
- import {Link} from 'react-router-dom';
+import './AdminLoginPage.css'; 
+import axios from 'axios'; 
+ 
 
   const AdminLoginPage = () => {
     // Add your voter login logic here
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+     const [loginError, setLoginError] = useState('');
   
     const handleUsernameChange = (event) => {
       setUsername(event.target.value);
@@ -19,9 +23,28 @@ import Navbar from './Navbar';
       setPassword(event.target.value);
     };
   
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
       event.preventDefault();
-      // Add login logic here, such as sending login credentials to the server for authentication
+  
+      try {
+        const response = await axios.post('http://localhost:5000/admin-login', {
+          username,
+          password
+        });
+        console.log(response.data)
+        if (response.data.success) {
+          // Login successful, redirect or show success message
+          console.log('Login successful');
+          console.log(response.data);
+          
+          navigate("/admin");
+        } else {
+          setLoginError('Invalid credentials');
+        }
+      } catch (error) {
+        console.error('Login failed:', error.message);
+        setLoginError('Login failed. Please try again.');
+      }
     };
   
     return (
@@ -51,9 +74,8 @@ import Navbar from './Navbar';
               onChange={handlePasswordChange}
             />
           </div>
-          <button className='button1' type="submit">
-          <Link to="/admin">Login</Link>
-          </button>
+          {loginError && <p className="error-message">{loginError}</p>}
+          <button className='button1' type="submit">Login</button>
         </form>
       </div>
   

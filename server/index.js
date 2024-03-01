@@ -67,5 +67,21 @@ app.post('/voter-login', async (req, res) => {
   }
 });
 
+app.post('/admin-login', (req, res) => {
+  const { username, password } = req.body;
+  try{
+  if (username === 'admin_bioballet' && password === 'admin1234') {
+    // Authentication successful
+    res.json({ success: true, message: 'Login successful' });
+  } else {
+    // Authentication failed
+    res.status(401).json({ success: false, message: 'Invalid credentials' });
+  }
+}catch (error) {
+    console.error('Login failed:', error.message);
+    res.status(500).json({ message: 'Failed to login' });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
