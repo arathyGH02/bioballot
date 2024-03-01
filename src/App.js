@@ -12,6 +12,7 @@ import Admin from './Admin';
 import AddCandidate from './AddCandidate';
 import VoterDetails from './VoterDetails';
 import ElectionPage from './ElectionPage';
+import AddElection from './AddElection';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/add-candidate" element={<AddCandidate />} />
         <Route path="/voter-details" element={<VoterDetails />} />
         <Route path="/election-page" element={<ElectionPage />} />
+        <Route path="/add-election" element={<AddElection />} />
         </Routes>
       </Router>
   );
