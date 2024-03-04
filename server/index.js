@@ -26,6 +26,31 @@ const voterSchema = new mongoose.Schema({
 
 const Voter = mongoose.model('Voter', voterSchema);
 
+const electionSchema = new mongoose.Schema({
+  name: String,
+  date: Date,
+  electionid: String,
+  numofcandidate: String,
+  type: { type: String, enum: ['state-assembly', 'lok-sabha', 'local'] },
+  constituency: String,
+  wardNumber: String,
+  panchayat: { type: String, required: false },
+  municipality: { type: String, required: false }
+});
+
+const Election = mongoose.model('Election', electionSchema);
+
+const candidateSchema = new mongoose.Schema({
+  name: String,
+  party: String,
+  constituency: { type: String, required: false },
+  wardnumber: { type: String, required: false },
+  electionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Election' }
+});
+
+const Candidate = mongoose.model('Candidate', candidateSchema);
+
+
 app.use(express.json());
 app.use(cors());
 
@@ -82,6 +107,31 @@ app.post('/admin-login', (req, res) => {
     res.status(500).json({ message: 'Failed to login' });
   }
 });
+
+app.post('/add-election', async (req, res) => {
+  try {
+    const newElection = new Election(req.body);
+    await newElection.save();
+    res.status(200).json({ message: 'Election added successfully' });
+  } catch (error) {
+    console.error('Failed to add election:', error.message);
+    res.status(500).json({ message: 'Failed to add election' });
+  }
+});
+
+app.post('/add-candidate', async (req, res) => {
+  try {
+    const newCandidate = new Candidate(req.body);
+    await newCandidate.save();
+    res.status(200).json({ message: 'Candidate added successfully' });
+  } catch (error) {
+    console.error('Failed to add candidate:', error.message);
+    res.status(500).json({ message: 'Failed to add candidate' });
+  }
+});
+
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

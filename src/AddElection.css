@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .add-election-container {
     max-width: 700px;
     margin: 20px auto;
@@ -60,3 +61,15 @@
   .submit-button:hover {
     background-color:  #0056b3;
   }
+=======
+.Button{
+    background-color: #d3d8d3;
+    color: #1e68c2;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 15px;
+    width: 200px;
+}
+>>>>>>> 895e4564c69a9bcf936dc00460acd7dedd3cc9a9
