@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const multer = require('multer');
 
 const app = express();
 
@@ -44,9 +43,8 @@ const Election = mongoose.model('Election', electionSchema);
 const candidateSchema = new mongoose.Schema({
   name: String,
   party: String,
-  symbol: String, // Assuming the symbol is stored as a file path
   constituency: { type: String, required: false },
-  wardNumber: { type: String, required: false },
+  wardnumber: { type: String, required: false },
   electionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Election' }
 });
 
@@ -55,17 +53,6 @@ const Candidate = mongoose.model('Candidate', candidateSchema);
 
 app.use(express.json());
 app.use(cors());
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + '-' + Date.now());
-  },
-});
-
-const upload = multer({ storage: storage });
 
 app.post('/register', async (req, res) => {
   try {
@@ -132,7 +119,7 @@ app.post('/add-election', async (req, res) => {
   }
 });
 
-app.post('/add-candidate',  upload.single('symbol'),async (req, res) => {
+app.post('/add-candidate', async (req, res) => {
   try {
     const newCandidate = new Candidate(req.body);
     await newCandidate.save();
@@ -142,7 +129,6 @@ app.post('/add-candidate',  upload.single('symbol'),async (req, res) => {
     res.status(500).json({ message: 'Failed to add candidate' });
   }
 });
-
 
 
 
