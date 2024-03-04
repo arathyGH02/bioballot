@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import Axios from 'axios';
 import './AddElection.css'; // Make sure this matches your actual CSS file name
 
 const AddElection = () => {
@@ -9,6 +10,8 @@ const AddElection = () => {
   const [electionData, setElectionData] = useState({
     name: '',
     date: '',
+    electionid: '',
+    numofcandidate: '',
     type: '',
     constituency: '',
     wardNumber: '',
@@ -24,10 +27,14 @@ const AddElection = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Your submission logic here
-    history('/add-candidate');
+    try {
+      await Axios.post('http://localhost:5000/add-election', electionData);
+      history('/add-candidate');
+    } catch (error) {
+      console.error('Error adding election:', error);
+    }
   };
 
   return (
@@ -53,6 +60,23 @@ const AddElection = () => {
             value={electionData.date}
             onChange={handleInputChange}
           />
+          <label htmlFor="electionid">Election ID:</label>
+          <input
+            type="text"
+            id="electionid"
+            name="electionid"
+            value={electionData.electionid}
+            onChange={handleInputChange}
+          />
+        
+         <label htmlFor="numofcandidate">Number of Candidates:</label>
+          <input
+            type="text"
+            id="numofcandidate"
+            name="numofcandidate"
+            value={electionData.numofcandidate}
+            onChange={handleInputChange}
+          />
 
           <label htmlFor="type">Type of Election:</label>
           <select
@@ -68,50 +92,50 @@ const AddElection = () => {
           </select>
 
           {electionData.type === 'state-assembly' || electionData.type === 'lok-sabha' ? (
-            <label htmlFor="constituency">Constituency:</label>
-          ) : (
-            <label htmlFor="wardNumber">Ward Number:</label>
-          )}
-          {electionData.type === 'state-assembly' || electionData.type === 'lok-sabha' ? (
-            <input
-              type="text"
-              id="constituency"
-              name="constituency"
-              value={electionData.constituency}
-              onChange={handleInputChange}
-            />
-          ) : electionData.type === 'local' ? (
-            <>
-              <label htmlFor="panchayat">Panchayat:</label>
-              <input
-                type="text"
-                id="panchayat"
-                name="panchayat"
-                required="false"
-                value={electionData.panchayat}
-                onChange={handleInputChange}
-              />
-              <label htmlFor="municipality">Municipality:</label>
-              <input
-                type="text"
-                id="municipality"
-                name="municipality"
-                required="false"
-                value={electionData.municipality}
-                onChange={handleInputChange}
-              />
-            </>
-          ) : (
-            <input
-              type="text"
-              id="wardNumber"
-              name="wardNumber"
-              value={electionData.wardNumber}
-              onChange={handleInputChange}
-            />
-          )}
+  <>
+    <label htmlFor="constituency">Constituency:</label>
+    <input
+      type="text"
+      id="constituency"
+      name="constituency"
+      value={electionData.constituency}
+      onChange={handleInputChange}
+    />
+  </>
+) : null}
 
-          <button type="submit">Add Election</button>
+{electionData.type === 'local' ? (
+  <>
+    <label htmlFor="panchayat">Panchayat:</label>
+    <input
+      type="text"
+      id="panchayat"
+      name="panchayat"
+      value={electionData.panchayat}
+      onChange={handleInputChange}
+    />
+    <label htmlFor="municipality">Municipality:</label>
+    <input
+      type="text"
+      id="municipality"
+      name="municipality"
+      value={electionData.municipality}
+      onChange={handleInputChange}
+    />
+    <label htmlFor="wardNumber">Ward Number:</label>
+    <input
+      type="text"
+      id="wardNumber"
+      name="wardNumber"
+      value={electionData.wardNumber}
+      onChange={handleInputChange}
+    />
+  </>
+) : null}
+
+<br></br>
+<br></br>
+          <button className="Button" type="submit">Add Election</button>
         </form>
       </div>
     </div>

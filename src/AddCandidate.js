@@ -11,6 +11,8 @@ const AddCandidate = () => {
     party: '',
     symbol: null, // Assume symbol is a file
     constituency: '',
+    wardnumber: '',
+    electionid: ''
   });
 
   const [message, setMessage] = useState('');
@@ -26,18 +28,26 @@ const AddCandidate = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const formData = new FormData();
+  
+    // Append all the form data to the FormData object
+    for (const key in candidateData) {
+      if (candidateData[key] instanceof File) {
+        // If the value is a File, append it to the FormData object
+        formData.append(key, candidateData[key]);
+      } else {
+        // Otherwise, append the value as a string
+        formData.append(key, candidateData[key]);
+      }
+    }
+  
     try {
-      // Simulate sending data to the backend and updating the database
-      // Replace this with your actual API call
-      const response = await fetch('your-backend-api-endpoint', {
+      const response = await fetch('http://localhost:5000/add-candidate', {
         method: 'POST',
-        body: JSON.stringify(candidateData),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        body: formData,
       });
-
+  
       if (response.ok) {
         setMessage('Candidate added successfully!');
       } else {
@@ -48,8 +58,6 @@ const AddCandidate = () => {
       setMessage('An error occurred. Please try again later.');
     }
   };
-//form submission logic ends here
-
 
   return (
 
@@ -61,22 +69,32 @@ const AddCandidate = () => {
         <label className="add-candidate-label" htmlFor="name">
           Name
         </label>
-        <input className="add-candidate-input" type="text" id="name" />
+        <input className="add-candidate-input" type="text" id="name" required />
 
         <label className="add-candidate-label" htmlFor="party">
           Party
         </label>
-        <input className="add-candidate-input" type="text" id="party" />
+        <input className="add-candidate-input" type="text" id="party" required/>
 
         <label className="add-candidate-label" htmlFor="symbol">
           Symbol
         </label>
-        <input className="add-candidate-input" type="file" id="symbol" />
+        <input className="add-candidate-input" type="file" id="symbol"required />
 
         <label className="add-candidate-label" htmlFor="constituency">
           Constituency
         </label>
         <input className="add-candidate-input" type="text" id="constituency" />
+
+        <label className="add-candidate-label" htmlFor="wardnumber">
+          Ward Number
+        </label>
+        <input className="add-candidate-input" type="text" id="wardnumber" />
+
+        <label className="add-candidate-label" htmlFor="electionid">
+          Election ID
+        </label>
+        <input className="add-candidate-input" type="text" id="electionid" required/>
 
         <button className="add-candidate-button" type="submit">
           Add Candidate
