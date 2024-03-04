@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import './AddCandidate.css';
 import Axios from 'axios';
 
 const AddCandidate = () => {
+  const history = useNavigate();
   const [candidateData, setCandidateData] = useState({
     name: '',
     party: '',
@@ -38,6 +40,7 @@ const AddCandidate = () => {
       } else {
         setMessage('Failed to add candidate. Please try again.');
       }
+      history('/admin');
     } catch (error) {
       console.error('Error:', error);
       setMessage('An error occurred. Please try again later.');
@@ -102,6 +105,7 @@ const AddCandidate = () => {
             onChange={handleInputChange}
             required
           />
+         
 
           <button className="add-candidate-button" type="submit">Add Candidate</button>
         </form>

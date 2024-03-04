@@ -32,7 +32,7 @@ const AddElection = () => {
     e.preventDefault();
     try {
       await Axios.post('http://localhost:5000/add-election', electionData);
-      history('/add-candidate');
+      history('/admin');
     } catch (error) {
       console.error('Error adding election:', error);
     }
@@ -78,7 +78,7 @@ const AddElection = () => {
         
          <label htmlFor="numofcandidate">Number of Candidates:</label>
           <input
-            type="text"
+            type="number"
             id="numofcandidate"
             name="numofcandidate"
             value={electionData.numofcandidate}

@@ -45,7 +45,7 @@
     font-size: 18px; /* Adjust the font size */
   }
   
-  .submit-button {
+  .Button {
     background-color: #007bff;
     color: #fff;
     padding: 10px;
@@ -55,6 +55,7 @@
     transition: background-color 0.3s ease;
     font-size: 18px; /* Adjust the font size */
     font-weight: bold;
+    
   }
   
   .submit-button:hover {

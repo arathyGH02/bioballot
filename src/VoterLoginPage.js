@@ -28,7 +28,7 @@ const VoterLoginPage = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3000/voter-login', {
+      const response = await axios.post('http://localhost:5000/voter-login', {
         username,
         aadhaarNumber,
         password,

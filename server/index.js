@@ -30,7 +30,7 @@ const electionSchema = new mongoose.Schema({
   name: String,
   date: Date,
   electionid: String,
-  numofcandidate: String,
+  numofcandidate: Number,
   type: { type: String, enum: ['state-assembly', 'lok-sabha', 'local'] },
   constituency: String,
   wardNumber: String,
@@ -45,7 +45,7 @@ const candidateSchema = new mongoose.Schema({
   party: String,
   constituency: { type: String, required: false },
   wardnumber: { type: String, required: false },
-  electionId: { type: mongoose.Schema.Types.ObjectId, ref: 'Election' }
+  electionid: { type: String, ref: 'Election' }
 });
 
 const Candidate = mongoose.model('Candidate', candidateSchema);
