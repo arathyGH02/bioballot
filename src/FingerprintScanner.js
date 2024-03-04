@@ -1,8 +1,10 @@
 import React, { useRef, useState } from 'react';
-import Navbar from './Navbar'; // Import the Navbar component
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import Navbar from './Navbar';
 import './FingerprintScanner.css';
 
 const FingerprintScanner = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
   const scannerRef = useRef(null);
   const [scanning, setScanning] = useState(false);
   const [fingerprintImage, setFingerprintImage] = useState(null);
@@ -19,15 +21,17 @@ const FingerprintScanner = () => {
   };
 
   const captureFingerprintImage = () => {
-    // Placeholder function to simulate capturing the fingerprint image
-    // In a real integration, this function would capture the actual fingerprint image
-    // Here, we'll just return a placeholder image URL
-    return "https://via.placeholder.com/300"; // Increased size to 300x300 pixels
+    return "https://via.placeholder.com/300";
+  };
+
+  const handleNextButtonClick = () => {
+    // Navigate to FacialRecognition.js when the "NEXT" button is clicked
+    navigate('/facial-recognition');
   };
 
   return (
     <div>
-      <Navbar /> {/* Include the Navbar component */}
+      <Navbar />
       <div className="fingerprint-scanner-container">
         <h2 className="scanner-title">Fingerprint Scanner</h2>
         <p className="scanner-message">{scanning ? "Please place your finger on the sensor..." : "Scan your fingerprint"}</p>
@@ -36,7 +40,9 @@ const FingerprintScanner = () => {
           {scanning ? "Scanning..." : "Scan Fingerprint"}
         </button>
         <br></br>
-        <button className={`scan-button ${scanning ? 'scanning' : ''}`}>NEXT</button>
+        <button className={`scan-button ${scanning ? 'scanning' : ''}`} onClick={handleNextButtonClick}>
+          NEXT
+        </button>
         <div ref={scannerRef}></div>
       </div>
     </div>

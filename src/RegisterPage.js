@@ -117,7 +117,7 @@ const VoterList = () => {
           <div>
             <button className="button2" type="submit">Register</button>
             <br></br>
-            <Link to="/Scanner" className="button2">NEXT</Link>
+            <Link to="/Scanner" className="button3">NEXT</Link>
           </div>
         </form>
       </div>

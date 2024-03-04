@@ -32,15 +32,30 @@
   }
   
   .next-button {
-    text-align: right; /* Align the button to the right */
+    text-align: center; 
     margin-top: 10px;
   }
   
   .button2 {
     display: block;
     margin-left: 500px;
-    background-color: #d3d8d3;
-    color: #1e68c2;
+
+    background-color:#1e68c2 ;
+    color: #d3d8d3;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 15px;
+    width: 100px;
+    grid-column: span 2;
+    align-items: center;
+}
+.button3{
+  display: block;
+    margin-left: 500px;
+    background-color:#1e68c2 ;
+    color: #d3d8d3;
     padding: 12px 20px;
     border: none;
     cursor: pointer;

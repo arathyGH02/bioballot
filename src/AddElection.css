@@ -1,0 +1,62 @@
+.add-election-container {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 5px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 0px rgba(0, 0, 0, 0.1);
+  }
+  .add-election-title {
+    color: black;
+    font-size: 29px; /* Adjust the font size */
+  }
+  
+  .add-election-form {
+    display: grid;
+    gap: 8px;
+  }
+    
+
+  .add-election-message{
+    color:  #237FEC;
+    align-items: center;
+    padding-left: 205px;
+  }
+
+
+  .input-label {
+    margin-bottom: 8px;
+
+    font-weight: normal;
+    color: black;
+    font-size: 18px; /* Adjust the font size */
+  }
+  
+  .input-field,
+  .select-field {
+    /*padding: 8px;
+    margin-bottom: 16px;*/
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #fff;
+    font-size: 18px; /* Adjust the font size */
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 18px; /* Adjust the font size */
+    font-weight: bold;
+  }
+  
+  .submit-button:hover {
+    background-color:  #0056b3;
+  }

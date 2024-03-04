@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import axios from 'axios'; // Import axios for HTTP requests
 import './VoterLoginPage.css';
@@ -8,6 +9,8 @@ const VoterLoginPage = () => {
   const [aadhaarNumber, setAadhaarNumber] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -25,7 +28,7 @@ const VoterLoginPage = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/voter-login', {
+      const response = await axios.post('http://localhost:3000/voter-login', {
         username,
         aadhaarNumber,
         password,
@@ -36,6 +39,7 @@ const VoterLoginPage = () => {
         console.log('Login successful');
         console.log(response.data)
         window.alert('Login successful');
+        navigate('/scanner');
       } else {
         setLoginError('Invalid credentials');
       }

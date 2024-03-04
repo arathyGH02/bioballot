@@ -1,3 +1,4 @@
+// AddElection.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
@@ -27,7 +28,7 @@ const AddElection = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Your submission logic here
-    history('/add-candidate');
+    history('/admin');
   };
 
   return (
@@ -36,8 +37,11 @@ const AddElection = () => {
       <div className="add-election-container">
         <h2 className="add-election-title">Add New Election</h2>
         <form className="add-election-form" onSubmit={handleSubmit}>
-          <label htmlFor="name">Name of Election:</label>
+          <label className="input-label" htmlFor="name">
+            Name of Election:
+          </label>
           <input
+            className="input-field"
             type="text"
             id="name"
             name="name"
@@ -45,8 +49,11 @@ const AddElection = () => {
             onChange={handleInputChange}
           />
 
-          <label htmlFor="date">Date of Election:</label>
+          <label className="input-label" htmlFor="date">
+            Date of Election:
+          </label>
           <input
+            className="input-field"
             type="date"
             id="date"
             name="date"
@@ -54,8 +61,11 @@ const AddElection = () => {
             onChange={handleInputChange}
           />
 
-          <label htmlFor="type">Type of Election:</label>
+          <label className="input-label" htmlFor="type">
+            Type of Election:
+          </label>
           <select
+            className="input-field"
             id="type"
             name="type"
             value={electionData.type}
@@ -68,12 +78,17 @@ const AddElection = () => {
           </select>
 
           {electionData.type === 'state-assembly' || electionData.type === 'lok-sabha' ? (
-            <label htmlFor="constituency">Constituency:</label>
+            <label className="input-label" htmlFor="constituency">
+              Constituency:
+            </label>
           ) : (
-            <label htmlFor="wardNumber">Ward Number:</label>
+            <label className="input-label" htmlFor="wardNumber">
+              Ward Number:
+            </label>
           )}
           {electionData.type === 'state-assembly' || electionData.type === 'lok-sabha' ? (
             <input
+              className="input-field"
               type="text"
               id="constituency"
               name="constituency"
@@ -82,8 +97,11 @@ const AddElection = () => {
             />
           ) : electionData.type === 'local' ? (
             <>
-              <label htmlFor="panchayat">Panchayat:</label>
+              <label className="input-label" htmlFor="panchayat">
+                Panchayat:
+              </label>
               <input
+                className="input-field"
                 type="text"
                 id="panchayat"
                 name="panchayat"
@@ -91,8 +109,11 @@ const AddElection = () => {
                 value={electionData.panchayat}
                 onChange={handleInputChange}
               />
-              <label htmlFor="municipality">Municipality:</label>
+              <label className="input-label" htmlFor="municipality">
+                Municipality:
+              </label>
               <input
+                className="input-field"
                 type="text"
                 id="municipality"
                 name="municipality"
@@ -103,6 +124,7 @@ const AddElection = () => {
             </>
           ) : (
             <input
+              className="input-field"
               type="text"
               id="wardNumber"
               name="wardNumber"
@@ -111,7 +133,9 @@ const AddElection = () => {
             />
           )}
 
-          <button type="submit">Add Election</button>
+          <button className="submit-button" type="submit">
+            Add Election
+          </button>
         </form>
       </div>
     </div>
