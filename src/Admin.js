@@ -7,7 +7,7 @@ import './Admin.css';
 
 const Admin = () => {
   // Placeholder data (replace with actual data fetching logic)
-  const registeredVotersCount = 500;
+  const registeredVotersCount = 6;
   const candidateCount = 10;
 
   return (
@@ -15,15 +15,19 @@ const Admin = () => {
     <div> <Navbar />
 
     <div className="admin-dashboard">
+    <Link to="/voter-list" className="admin-link">
       <div className="admin-box" onClick={() => console.log('Fetching Registered Voters')}>
         <h3>Registered Voters</h3>
         <p>Total Registered Voters: {registeredVotersCount}</p>
       </div>
+      </Link>
 
+      <Link to="/candidate-list" className="admin-link">
       <div className="admin-box" onClick={() => console.log('Fetching Candidate Details')}>
         <h3>Candidate Details</h3>
         <p>Total Candidates: {candidateCount}</p>
       </div>
+      </Link>
 
       <Link to="/add-candidate" className="admin-link">
         <div className="admin-box">

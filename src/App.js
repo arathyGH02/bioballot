@@ -14,6 +14,8 @@ import VoterDetails from './VoterDetails';
 import ElectionPage from './ElectionPage';
 import AddElection from './AddElection';
 import FacialRecognition from './FacialRecognition';
+import VoterList from './VoterList';
+import CandidateList from './CandidateList';
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
         <Route path="/election-page" element={<ElectionPage />} />
         <Route path="/add-election" element={<AddElection />} />
         <Route path="/facial-recognition" element={<FacialRecognition />} />
+        <Route path="/voter-list" element={<VoterList />} />
+        <Route path="/candidate-list" element={<CandidateList />} />
         </Routes>
       </Router>
   );
