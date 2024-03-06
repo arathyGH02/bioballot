@@ -119,27 +119,24 @@ app.post('/add-election', async (req, res) => {
   }
 });
 
-app.post('/add-candidate', async (req, res) => {
-  try {
-    const newCandidate = new Candidate(req.body);
-    await newCandidate.save();
-    res.status(200).json({ message: 'Candidate added successfully' });
-  } catch (error) {
-    console.error('Failed to add candidate:', error.message);
-    res.status(500).json({ message: 'Failed to add candidate' });
-  }
-});
 
-app.get('/add-candidate', async (req, res) => {
-  try {
-    console.log('Request received from frontend');
-    const candidates = await Candidate.find();
-    res.status(200).json(candidates);
-  } catch (error) {
-    console.error('Failed to fetch candidates:', error.message);
-    res.status(500).json({ message: 'Failed to fetch candidates' });
-  }
-});
+app.post('/add-candidate', async (req, res) => { 
+  const { electionid, name, party, constituency, wardnumber } = req.body;
+  if (!electionid || !name || !party) { return res.status(400).json({ message: 'Missing required fields' }); }
+  try { 
+    const existingElection = await Election.findOne({ electionid }); 
+    if (!existingElection) { return res.status(400).json({ message: 'Invalid election ID' }); }
+    const candidatesCount = await Candidate.countDocuments({ electionid }); 
+    if (candidatesCount >= existingElection.numofcandidate) 
+     { return res.status(400).json({ message: 'Maximum number of candidates reached for this election' }); }
+    const newCandidate = new Candidate({ electionid, name, party, constituency, wardnumber }); 
+    await newCandidate.save(); 
+    res.status(200).json({ message: 'Candidate added successfully' });
+   } catch (error) { 
+    console.error('Failed to add candidate:', error.message); 
+    res.status(500).json({ message: 'Failed to add candidate' }); 
+  } });
+
 
 
 

@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import './AddCandidate.css';
 import Axios from 'axios';
 
+
 const AddCandidate = () => {
   const history = useNavigate();
   const [candidateData, setCandidateData] = useState({
@@ -15,6 +16,8 @@ const AddCandidate = () => {
   });
 
   const [message, setMessage] = useState('');
+
+  
 
   useEffect(() => {
     const fetchCandidates = async () => {
@@ -51,13 +54,17 @@ const AddCandidate = () => {
           wardnumber: '',
           electionid: ''
         });
-      } else {
+      }
+      else if(response.status === 400){
+        setMessage(response.data.message);
+      }
+       else {
         setMessage('Failed to add candidate. Please try again.');
       }
       history('/admin');
     } catch (error) {
       console.error('Error:', error);
-      setMessage('An error occurred. Please try again later.');
+      setMessage('No more candidates can be added.');
     }
   };
   

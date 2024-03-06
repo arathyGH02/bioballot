@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Axios from 'axios';
 import './AddElection.css'; // Make sure this matches your actual CSS file name
 
+
 const AddElection = () => {
   const history = useNavigate();
 
