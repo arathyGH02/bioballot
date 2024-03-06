@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import './AddCandidate.css';
@@ -15,6 +15,20 @@ const AddCandidate = () => {
   });
 
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        const response = await Axios.get('http://localhost:5000/add-candidate');
+        setCandidateData(response.data);
+       
+      } catch (error) {
+        console.error('Failed to fetch voters:', error.message);
+      }
+    };
+
+    fetchCandidates();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

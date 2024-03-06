@@ -1,0 +1,32 @@
+.candidate-list-container {
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    max-width: 800px; /* Limit the width of the container */
+  }
+  
+  .header {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  table th,
+  table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  table th {
+    background-color: #f2f2f2;
+  }
+  
+  /* Add more styles as needed */
+  

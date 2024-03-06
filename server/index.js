@@ -130,6 +130,17 @@ app.post('/add-candidate', async (req, res) => {
   }
 });
 
+app.get('/add-candidate', async (req, res) => {
+  try {
+    console.log('Request received from frontend');
+    const candidates = await Candidate.find();
+    res.status(200).json(candidates);
+  } catch (error) {
+    console.error('Failed to fetch candidates:', error.message);
+    res.status(500).json({ message: 'Failed to fetch candidates' });
+  }
+});
+
 
 
 
