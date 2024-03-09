@@ -62,12 +62,12 @@ const VoterList = () => {
             <br />
             <label>
               Phone Number:
-              <input type="tel" name="phoneNumber" required />
+              <input type="tel" name="phoneNumber" maxLength="10" required />
             </label>
             <br />
             <label>
               Aadhaar:
-              <input type="text" name="aadhaar" required />
+              <input type="text" name="aadhaar"  maxLength="12" required />
             </label>
             <br />
             <label>
@@ -116,8 +116,7 @@ const VoterList = () => {
           </div>
           <div>
             <button className="button2" type="submit">Register</button>
-            <br></br>
-            <Link to="/Scanner" className="button3">NEXT</Link>
+          
           </div>
         </form>
       </div>

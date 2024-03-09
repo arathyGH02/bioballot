@@ -41,10 +41,26 @@ const AddCandidate = () => {
     }));
   };
 
+  
+  const isValidElectionId = (id) => {
+    // Check if the id is a valid two-digit number
+    return /^\d{2}$/.test(id);
+  };
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const { electionid } = candidateData;
+    
+      // Validate election ID format
+      if (!isValidElectionId(electionid)) {
+        setMessage('Invalid election ID format');
+        return;
+      }
+    
       const response = await Axios.post('http://localhost:5000/add-candidate', candidateData);
+      console.log(response);
       if (response.status === 200) {
         setMessage('Candidate added successfully!');
         setCandidateData({
@@ -54,19 +70,22 @@ const AddCandidate = () => {
           wardnumber: '',
           electionid: ''
         });
-      }
-      else if(response.status === 400){
+      } else if (response.status === 400) {
         setMessage(response.data.message);
-      }
-       else {
+      } else {
         setMessage('Failed to add candidate. Please try again.');
       }
       history('/admin');
     } catch (error) {
       console.error('Error:', error);
-      setMessage('No more candidates can be added.');
+      if (error.response && error.response.data && error.response.data.message) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage('An error occurred. Please try again later.');
+      }
     }
   };
+  
   
   return (
     <div>

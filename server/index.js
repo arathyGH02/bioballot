@@ -45,11 +45,10 @@ const candidateSchema = new mongoose.Schema({
   party: String,
   constituency: { type: String, required: false },
   wardnumber: { type: String, required: false },
-  electionid: { type: String, ref: 'Election' }
+  electionid: String
 });
 
 const Candidate = mongoose.model('Candidate', candidateSchema);
-
 
 app.use(express.json());
 app.use(cors());
@@ -57,7 +56,6 @@ app.use(cors());
 app.post('/register', async (req, res) => {
   try {
     const newVoter = new Voter(req.body);
-  
     await newVoter.save();
     res.status(200).json({ message: 'Voter registered successfully' });
   } catch (error) {
@@ -94,15 +92,13 @@ app.post('/voter-login', async (req, res) => {
 
 app.post('/admin-login', (req, res) => {
   const { username, password } = req.body;
-  try{
-  if (username === 'admin_bioballet' && password === 'admin1234') {
-    // Authentication successful
-    res.json({ success: true, message: 'Login successful' });
-  } else {
-    // Authentication failed
-    res.status(401).json({ success: false, message: 'Invalid credentials' });
-  }
-}catch (error) {
+  try {
+    if (username === 'admin_bioballet' && password === 'admin1234') {
+      res.json({ success: true, message: 'Login successful' });
+    } else {
+      res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+  } catch (error) {
     console.error('Login failed:', error.message);
     res.status(500).json({ message: 'Failed to login' });
   }
@@ -119,27 +115,43 @@ app.post('/add-election', async (req, res) => {
   }
 });
 
-
-app.post('/add-candidate', async (req, res) => { 
-  const { electionid, name, party, constituency, wardnumber } = req.body;
-  if (!electionid || !name || !party) { return res.status(400).json({ message: 'Missing required fields' }); }
-  try { 
-    const existingElection = await Election.findOne({ electionid }); 
-    if (!existingElection) { return res.status(400).json({ message: 'Invalid election ID' }); }
-    const candidatesCount = await Candidate.countDocuments({ electionid }); 
-    if (candidatesCount >= existingElection.numofcandidate) 
-     { return res.status(400).json({ message: 'Maximum number of candidates reached for this election' }); }
-    const newCandidate = new Candidate({ electionid, name, party, constituency, wardnumber }); 
-    await newCandidate.save(); 
+app.post('/add-candidate', async (req, res) => {
+  console.log('Received request to add candidate:', req.body);
+  const { name, party, constituency, wardnumber, electionid } = req.body;
+  if (!electionid || !name || !party) {
+    console.log('Missing required fields');
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+  try {
+    const existingElection = await Election.findOne({ electionid });
+    if (!existingElection) {
+      console.log("no");
+      return res.status(400).json({ message: 'Invalid election ID' });
+    }
+    const candidatesCount = await Candidate.countDocuments({ electionid });
+    if (candidatesCount >= existingElection.numofcandidate) {
+      console.log("got it");
+      return res.status(400).json({ message: 'Maximum number of candidates reached for this election' });
+    }
+    const newCandidate = new Candidate({ name, party, constituency, wardnumber, electionid });
+    await newCandidate.save();
     res.status(200).json({ message: 'Candidate added successfully' });
-   } catch (error) { 
-    console.error('Failed to add candidate:', error.message); 
-    res.status(500).json({ message: 'Failed to add candidate' }); 
-  } });
+  } catch (error) {
+    console.error('Failed to add candidate:', error.message);
+    res.status(500).json({ message: 'Failed to add candidate' });
+  }
+});
 
-
-
-
+app.get('/add-candidate', async (req, res) => {
+  try {
+    console.log('Request received from frontend');
+    const candidates = await Candidate.find();
+    res.status(200).json(candidates);
+  } catch (error) {
+    console.error('Failed to fetch candidates:', error.message);
+    res.status(500).json({ message: 'Failed to fetch candidates' });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
