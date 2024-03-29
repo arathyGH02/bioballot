@@ -55,6 +55,16 @@ app.use(cors());
 
 app.post('/register', async (req, res) => {
   try {
+
+    const { aadhaar, voterid } = req.body;
+
+    // Check if a voter with the same Aadhaar number or Voter ID already exists
+    const existingVoter = await Voter.findOne({ $or: [{ aadhaar }, { voterid }] });
+    if (existingVoter) {
+      console.log("already preseny")
+      res.status(400).json({ message: 'Voter already registered' });
+    }
+
     const newVoter = new Voter(req.body);
     await newVoter.save();
     res.status(200).json({ message: 'Voter registered successfully' });
@@ -152,6 +162,21 @@ app.get('/add-candidate', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch candidates' });
   }
 });
+
+app.get('/api/:electionId/add-candidate', async (req, res) => {
+  const { electionId } = req.params;
+  try {
+    const candidates = await Candidate.find({ electionid: electionId }, { name: 1, party: 1, constituency: 1, _id: 0 });
+      res.json(candidates);
+  } catch (error) {
+      console.error('Error fetching candidates:', error);
+      res.status(500).json({ message: 'Server Error' });
+  }
+});
+
+
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

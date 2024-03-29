@@ -28,21 +28,40 @@ const VoterList = () => {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
-    try {
-      const response = await axios.post('http://localhost:5000/register', data);
+    // Calculate the minimum allowable birth year based on the age
+  const currentYear = new Date().getFullYear();
+  const minBirthYear = currentYear - data.age;
 
-      if (response.status !== 200) {
-        throw new Error('Failed to register');
-      }
+  // Get the birth year from the date of birth input
+  const dobYear = parseInt(data.dob.split("-")[0]);
 
-      // Assuming the server responds with a JSON object containing a success message
-      console.log(response.data.message); // Log the success message
-      window.alert(response.data.message);
-    } catch (error) {
-      console.error('Registration failed:', error.message);
+  // Validate that the birth year matches the calculated minimum birth year
+  if (dobYear !== minBirthYear) {
+    window.alert("Please enter a valid date of birth for the given age.");
+    return;
+  }
+  const legalVotingAge = 18;
+  if (data.age < legalVotingAge) {
+    window.alert("You must be at least 18 years old to register as a voter.");
+    return;
+  }
+
+  try {
+    const response = await axios.post('http://localhost:5000/register', data);
+
+    if (response.data.message === 'Voter already registered') {
+      window.alert("You are already registered as a voter.");
+    } else if (response.status !== 200) {
+      throw new Error('Failed to register');
     }
-  };
 
+    // Assuming the server responds with a JSON object containing a success message
+    console.log(response.data.message); // Log the success message
+    window.alert(response.data.message);
+  } catch (error) {
+    console.error('Registration failed:', error.message);
+  }
+};
   return (
     <div>
       <Navbar />
@@ -62,12 +81,12 @@ const VoterList = () => {
             <br />
             <label>
               Phone Number:
-              <input type="tel" name="phoneNumber" maxLength="10" required />
+              <input type="tel" name="phoneNumber" pattern="[0-9]{10}" required />
             </label>
             <br />
             <label>
               Aadhaar:
-              <input type="text" name="aadhaar"  maxLength="12" required />
+              <input type="text" name="aadhaar"  pattern="[0-9]{12}" required />
             </label>
             <br />
             <label>
