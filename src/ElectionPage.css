@@ -1,50 +1,66 @@
-/* src/ElectionPage.css */
+.election-heading {
+  text-align: center; /* Center text horizontally */
+  margin-top: 20px; /* Add some margin at the top */
+}
 
-.election-page-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  .election-page-title {
-    color: black;
-  }
-  
-  .election-page-subtitle {
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .candidates-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  .candidates-table th, .candidates-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .submit-vote-button-container {
-    text-align: center;
-  }
-  
-  .submit-vote-button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 15px;
-    font-size: 16px;
+.election-id-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.election-id-label {
+  margin-right: 20px;
+  margin-left: 70px;
+  flex-shrink: 0; /* Prevent label from shrinking */
+}
+
+.election-id-input {
+ 
+  padding: 4px; /* Add some padding to input */
+  width: 250px;
+}
+
+.Button1{
+  display: block;
+    margin-left: 70px;
+
+    background-color:#237FEC;
+    color: #ffffff;
+    padding: 12px 20px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px; /* Adjust the margin as needed */
-  }
-  
-  .submit-vote-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
+    font-size: 18px;
+    border-radius: 15px;
+    width: 100px;
+    grid-column: span 2;
+    align-items: center;
+}
+
+table {
+  width: 90%; /* Set table width to 100% */
+  border-collapse: collapse; /* Collapse table borders */
+  margin: 0 auto; /* Center the table horizontally */
+}
+
+th, td {
+  padding: 8px; /* Add padding to table cells */
+  border: 1px solid #ddd; /* Add border to table cells */
+  text-align: left; /* Align text to the left */
+}
+
+.Button2{
+  display: block;
+    margin-left: 70px;
+
+    background-color:#237FEC ;
+    color: #ffffff;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 15px;
+    width: 170px;
+    grid-column: span 2;
+    align-items: center;
+}
