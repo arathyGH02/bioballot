@@ -194,16 +194,29 @@ app.post('/api/submit-vote', async (req, res) => {
 });
 
 
-app.get('/api/:electionId/get-winner', (req, res) => {
+app.get('/api/:electionId/get-winner', async (req, res) => {
   const { electionId } = req.params;
-  // Filter candidates for the specified election
-  const electionCandidates = Candidate.filter(c => c.electionId === electionId);
-  if (electionCandidates.length === 0) {
+  try {
+    console.log('Fetching candidates for electionId:', electionId);
+    // Find all candidates for the specified election ID
+    const electionCandidates = await Candidate.find({ electionid: electionId });
+   
+    console.log('Candidates found:', electionCandidates);
+    
+    if (electionCandidates.length === 0) {
+      console.log('No candidates found for electionId:', electionId);
       return res.status(404).json({ error: 'No candidates found for this election' });
+    }
+    
+    // Find the candidate with the highest number of votes
+    const winner = electionCandidates.reduce((prev, current) => (prev.votes > current.votes) ? prev : current);
+    console.log('Winner:', winner);
+    
+    res.status(200).json({ name: winner.name, party: winner.party });
+  } catch (error) {
+    console.error('Error fetching winner:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-  // Find the candidate with the highest number of votes
-  const winner = electionCandidates.reduce((prev, current) => (prev.votes > current.votes) ? prev : current);
-  res.status(200).json({ name: winner.name, party: winner.party });
 });
 
 

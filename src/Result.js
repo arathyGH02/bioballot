@@ -9,6 +9,7 @@ const ResultPage = () => {
 
     const handleGetWinner = async () => {
         try {
+            console.log('Election ID:', electionId);
             const response = await axios.get(`http://localhost:5000/api/${electionId}/get-winner`);
             console.log(response.data);
             setWinner(response.data);
