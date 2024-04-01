@@ -45,7 +45,8 @@ const candidateSchema = new mongoose.Schema({
   party: String,
   constituency: { type: String, required: false },
   wardnumber: { type: String, required: false },
-  electionid: String
+  electionid: String,
+  votes: { type: Number, default: 0 }
 });
 
 const Candidate = mongoose.model('Candidate', candidateSchema);
@@ -143,7 +144,7 @@ app.post('/add-candidate', async (req, res) => {
       console.log("got it");
       return res.status(400).json({ message: 'Maximum number of candidates reached for this election' });
     }
-    const newCandidate = new Candidate({ name, party, constituency, wardnumber, electionid });
+    const newCandidate = new Candidate({ name, party, constituency, wardnumber, electionid, votes: 0 });
     await newCandidate.save();
     res.status(200).json({ message: 'Candidate added successfully' });
   } catch (error) {
@@ -166,12 +167,43 @@ app.get('/add-candidate', async (req, res) => {
 app.get('/api/:electionId/add-candidate', async (req, res) => {
   const { electionId } = req.params;
   try {
-    const candidates = await Candidate.find({ electionid: electionId }, { name: 1, party: 1, constituency: 1, _id: 0 });
+    const candidates = await Candidate.find({ electionid: electionId }, { name: 1, party: 1, constituency: 1, _id: 1 });
       res.json(candidates);
   } catch (error) {
       console.error('Error fetching candidates:', error);
       res.status(500).json({ message: 'Server Error' });
   }
+});
+
+app.post('/api/submit-vote', async (req, res) => {
+  const { electionId, candidateId } = req.body;
+  try {
+    const candidate = await Candidate.findOneAndUpdate(
+      { _id: candidateId, electionid: electionId },
+      { $inc: { votes: 1 } }, // Increment the votes count by 1
+      { new: true } // Return the updated candidate document
+    );
+    if (!candidate) {
+      return res.status(404).json({ error: 'Candidate not found' });
+    }
+    res.status(200).json({ message: 'Vote submitted successfully' });
+  } catch (error) {
+    console.error('Error submitting vote:', error.message);
+    res.status(500).json({ message: 'Failed to submit vote' });
+  }
+});
+
+
+app.get('/api/:electionId/get-winner', (req, res) => {
+  const { electionId } = req.params;
+  // Filter candidates for the specified election
+  const electionCandidates = Candidate.filter(c => c.electionId === electionId);
+  if (electionCandidates.length === 0) {
+      return res.status(404).json({ error: 'No candidates found for this election' });
+  }
+  // Find the candidate with the highest number of votes
+  const winner = electionCandidates.reduce((prev, current) => (prev.votes > current.votes) ? prev : current);
+  res.status(200).json({ name: winner.name, party: winner.party });
 });
 
 
