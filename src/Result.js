@@ -19,27 +19,40 @@ const ResultPage = () => {
     };
 
     return (
-        <div>
-            <Navbar />
-            <div className="result-heading">
-                <h1>Election Result</h1>
-            </div>
-            <div className="result-container">
-                <label>Enter Election ID:</label>
-                <input
-                    type="text"
-                    value={electionId}
-                    onChange={(e) => setElectionId(e.target.value)}
-                />
-                <button onClick={handleGetWinner}>Get Winner</button>
-                {winner && (
-                    <div className="winner-info">
-                        <p>Name: {winner.name}</p>
-                        <p>Party: {winner.party}</p>
+        
+            <div>
+                <Navbar />
+                <div className='result-page-container'>
+                    <div className='result-design'>
+                    <div className="result-heading">
+                        <h1>Election Result</h1>
                     </div>
-                )}
+                    <div className="result-container">
+                        <label>Enter Election ID:</label>
+                        <input className='input-label'
+                            type="text"
+                            value={electionId}
+                            onChange={(e) => setElectionId(e.target.value)}
+                        />
+                        <br/>
+                        <br/>
+
+                        <button className='Button2' onClick={handleGetWinner}>Result</button>
+                        {winner && (
+                            <div className="winner-info">
+                                <p>Name: {winner.name}</p>
+                                <p>Party: {winner.party}</p>
+                            </div>
+                        )}
+                    </div>
+                    </div>
+                    <div>
+                    <img src='/images/winner.jpg' alt="winner-img"/>
+                    </div>
+                </div>
             </div>
-        </div>
+            
+        
     );
 };
 

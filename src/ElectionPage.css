@@ -38,9 +38,10 @@
 }
 
 table {
-  width: 90%; /* Set table width to 100% */
+  width: 80% !important; /* Set table width to 100% */
   border-collapse: collapse; /* Collapse table borders */
-  margin: 0 auto; /* Center the table horizontally */
+  margin-left:60px;
+   /* Center the table horizontally */
 }
 
 th, td {

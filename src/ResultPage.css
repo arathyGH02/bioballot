@@ -1,0 +1,47 @@
+.result-heading h1{
+    text-align: center;
+}
+.result-container label{
+    margin-left: 30px;
+    
+}
+.input-container{
+    margin:30px;
+}
+.input-label{
+    margin-left: 30px;
+    width:70%;
+}
+.Button2{
+    display: block;
+      margin-left: 30px;
+  
+      background-color:#237FEC ;
+      color: #ffffff;
+      padding: 12px 15px;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      border-radius: 15px;
+      width: 150px;
+      grid-column: span 2;
+      align-items: center;
+  }
+  .winner-info p{
+    margin-left: 30px;
+    font-size: 20px;
+    
+  }
+  .result-page-container{
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-around;
+  
+  }
+
+  .result-design{
+    border: 3px solid;
+    padding: 30px;
+  }
+
+  
