@@ -1,6 +1,12 @@
+//Backendcode
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const multer = require('multer');
+const fs = require('fs');
+
+
 
 const app = express();
 
@@ -21,7 +27,14 @@ const voterSchema = new mongoose.Schema({
   municipality: { type: String, required: false },
   legislativeassembly: String,
   voterid: String,
-  password: String
+  password: String,
+  facialImage: {
+    data: Buffer, // Store the image data as a base64-encoded string
+    contentType: String
+  },
+    fingerprintImage: {
+      data: Buffer,
+      contentType: String}
 });
 
 const Voter = mongoose.model('Voter', voterSchema);
@@ -62,11 +75,12 @@ app.post('/register', async (req, res) => {
     // Check if a voter with the same Aadhaar number or Voter ID already exists
     const existingVoter = await Voter.findOne({ $or: [{ aadhaar }, { voterid }] });
     if (existingVoter) {
-      console.log("already preseny")
+      console.log("already present")
       res.status(400).json({ message: 'Voter already registered' });
     }
+    const newVoter = new Voter({ ...req.body });
 
-    const newVoter = new Voter(req.body);
+
     await newVoter.save();
     res.status(200).json({ message: 'Voter registered successfully' });
   } catch (error) {
@@ -74,6 +88,116 @@ app.post('/register', async (req, res) => {
     res.status(500).json({ message: 'Failed to register voter' });
   }
 });
+
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/upload-facial-image', upload.single('facialImage'), async (req, res) => {
+  try {
+    const { voterId } = req.body;
+    const voter = await Voter.findOne({ voterid: voterId });
+    if (!voter) {
+      return res.status(404).json({ message: 'Voter not found' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+      console.log("not uploaded")
+    }
+    const fileData = req.file.path;
+    console.log(fileData)
+
+    voter.facialImage.data = fileData;
+
+    
+    voter.facialImage.contentType = req.file.mimetype;
+    
+    await voter.save();
+    res.status(200).json({ message: 'Facial image uploaded successfully' });
+  } catch (error) {
+    console.error('Failed to upload facial image:', error.message);
+    res.status(500).json({ message: 'Failed to upload facial image' });
+  }
+});
+
+const { spawn } = require('child_process');
+const path = require('path');
+
+
+app.post('/verify-facial-image', upload.single('facialImage'), async (req, res) => {
+  try {
+    const { voterId } = req.body;
+    const voter = await Voter.findOne({ voterid: voterId });
+    if (!voter) {
+      return res.status(404).json({ message: 'Voter not found' });
+    }
+
+    console.log('Received voter ID:', voterId);
+
+    if (!voter.facialImage || !voter.facialImage.data) {
+      console.log("Facial image data not found for voter")
+      return res.status(400).json({ message: 'Facial image data not found for voter' });
+    }
+    // Convert the stored image data to base64
+    const base64ImageData = voter.facialImage.data.toString('base64');
+    console.log("converted")
+    console.log(base64ImageData)
+
+    // Spawn a Python process
+    const pythonProcess = spawn('python', ['server/image_comparison.py', base64ImageData]); 
+    
+    let similarityScore = null;
+    const similarityThreshold = 30;
+
+    // Handle output from the Python script
+    pythonProcess.stdout.on('data', (data) => {
+    similarityScore = parseInt(data.toString().trim());
+    });
+
+    // Handle errors
+    pythonProcess.stderr.on('data', (data) => {
+     console.error(`Python script stderr: ${data}`);
+    });
+
+    // Handle process exit
+    pythonProcess.on('close', (code) => {
+    if (!isNaN(similarityScore)) {
+      console.log(`Python script exited with code ${code}`);
+      console.log(`Similarity Score: ${similarityScore}`);
+      if (similarityScore > similarityThreshold){
+        res.status(200).json({ message: 'Facial image verified' });
+        console.log("user verified");
+      }
+      else{
+          res.status(400).json({ message: 'Facial image not verified' });
+          console.log("User not Verified");
+      }
+  }
+ });
+ } catch (error) {
+    console.error('Failed to verify backend facial image:', error.message);
+    res.status(500).json({ message: 'Failed to verify facial image' });
+  }
+});
+
+// API endpoint to store the captured fingerprint data
+app.post('/api/fingerprint', async (req, res) => {
+  const { voterId, fingerprintData } = req.body;
+  try {
+    const voter = await Voter.findOne({ voterid: voterId });
+    if (!voter) {
+      return res.status(404).json({ message: 'Voter not found' });
+    }
+
+    voter.fingerprintImage.data = fingerprintData;
+    voter.fingerprintImage.contentType = 'image/bmp'; // Assuming the fingerprint data is in BMP format
+    await voter.save();
+    res.status(200).json({ message: 'Fingerprint data stored successfully' });
+  } catch (error) {
+    console.error('Failed to store fingerprint data:', error.message);
+    res.status(500).json({ message: 'Failed to store fingerprint data' });
+  }
+});
+
+
 
 app.get('/register', async (req, res) => {
   try {

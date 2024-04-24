@@ -17,6 +17,8 @@ import FacialRecognition from './FacialRecognition';
 import VoterList from './VoterList';
 import CandidateList from './CandidateList';
 import Result from './Result';
+import FacialImageRegister from './FacialImageRegister';
+import FingerRegister from './FingerRegister';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
         <Route path="/voter-login" element={<VoterLoginPage />} />
         <Route path="/admin-login" element={<AdminLoginPage />} />
         <Route path="/scanner" element={<FingerprintScanner />} />
+        <Route path="/face-register" element={<FacialImageRegister />} />
+        <Route path="/finger-register" element={<FingerRegister />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/add-candidate" element={<AddCandidate />} />

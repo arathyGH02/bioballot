@@ -1,38 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
-import './FacialRecognition.css'; // Create a CSS file for styling
+import axios from 'axios';
+
 
 const FacialRecognition = () => {
   const navigate = useNavigate();
-  const [facialImage, setFacialImage] = useState(null);
-  const [capturing, setCapturing] = useState(false);
+  const [voterId, setVoterId] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  useEffect(() => {
-    let captureTimeout;
-
-    if (capturing) {
-      // Simulate capturing facial image for a few seconds
-      captureTimeout = setTimeout(() => {
-        setCapturing(false);
-        setFacialImage(captureFacialImage());
-      }, 3000); // Adjust the timeout duration as needed
+  const handleVerifyFaceClick = async () => {
+    // Send the voter ID to the backend for verification
+    if (voterId) {
+      try {
+        const response = await axios.post('http://localhost:5000/verify-facial-image', { voterId });
+        if (response.status === 200) {
+          navigate('/election-page'); // Update to the actual path of your ElectionPage
+       } else if(response.status === 400) {
+          setErrorMessage('Failed to verify facial image. Please try again.');
+        }
+      } catch (error) {
+        console.error('Failed to verify facial image:', error.message);
+        setErrorMessage('Failed to verify facial image. Please try again.');
+      }
     }
-
-    return () => clearTimeout(captureTimeout);
-  }, [capturing]);
-
-  const handleCaptureFacialImage = () => {
-    setCapturing(true);
-  };
-
-  const captureFacialImage = () => {
-    // Placeholder function to simulate capturing the facial image
-    return "https://via.placeholder.com/300"; // Placeholder image URL
-  };
-
-  const handleNextButtonClick = () => {
-    navigate('/election-page'); // Update to the actual path of your ElectionPage
   };
 
   return (
@@ -40,15 +31,17 @@ const FacialRecognition = () => {
       <Navbar />
       <div className="facial-recognition-container">
         <h2 className="recognition-title">Facial Recognition</h2>
-        <p className="recognition-message">{capturing ? "Capturing facial image..." : facialImage ? "Facial image captured!" : "Capture your facial image for verification"}</p>
-        {facialImage && <img src={facialImage} alt="Facial Recognition" className="facial-image" />}
-        <button className={`capture-button ${capturing ? 'capturing' : facialImage ? 'captured' : ''}`} onClick={handleCaptureFacialImage} disabled={capturing || facialImage}>
-          {capturing ? "Capturing..." : facialImage ? "Facial Image Captured" : "Capture Facial Image"}
-        </button>
+        <p className="recognition-message">Enter your voter ID for facial verification</p>
         <br />
-        <button className={`next-button ${facialImage ? 'captured' : ''}`} onClick={handleNextButtonClick} disabled={!facialImage}>
-          NEXT
+        <label>
+          Voter ID:
+          <input className="label-field" type="text" value={voterId} onChange={(e) => setVoterId(e.target.value)} />
+        </label>
+        <br />
+        <button className="verify-button" onClick={handleVerifyFaceClick} disabled={!voterId}>
+          Verify Face
         </button>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     </div>
   );
