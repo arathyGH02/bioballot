@@ -137,6 +137,7 @@ const VoterList = () => {
             <button className="button2" type="submit">Register</button>
           
           </div>
+          <div> <Link to="/face-register" style= {{ textDecoration: 'none' }}><button className="button3" >Next</button></Link></div>
         </form>
       </div>
     </div>

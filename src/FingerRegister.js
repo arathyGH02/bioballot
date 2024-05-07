@@ -2,61 +2,47 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Navbar from './Navbar';
 import './FingerRegister.css';
-import { discoverDevice, getDeviceInfo, captureBiometric } from './MantraRDService'; // Import the MantraRDService module
+import axios from 'axios';
 
 const FingerRegister = () => {
   const navigate = useNavigate(); // Initialize useNavigate
   const scannerRef = useRef(null);
-  const [scanning, setScanning] = useState(false);
   const [fingerprintImage, setFingerprintImage] = useState(null);
+  const [voterId, setVoterId] = useState('');
+  const [registrationStatus, setRegistrationStatus] = useState('');
 
-  const handleScan = async () => {
-    setScanning(true);
-    const capturedImage = await captureFingerprintImage();
-    // Simulating delay for scanning
-    setTimeout(() => {
-      setScanning(false);
-      setFingerprintImage(capturedImage);
-    }, 2000);
+  const handleUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFingerprintImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
-  
-
- const captureFingerprintImage = async () => {
-  try {
-    const { port, path } = await discoverDevice(); // Discover the device to get the port and path
-    const capturedImage = await captureBiometric(port, path); // Pass the port and path to the captureBiometric function
-    console.log("Fingerprint image captured:", capturedImage);
-    return capturedImage;
-  } catch (error) {
-    console.error('Failed to capture fingerprint image:', error.message);
-    return null;
-  }
-};
-
-  
 
   const handleNextButtonClick = async () => {
-    // Assuming 'capturedFingerprintData' is the data you want to store in the database
-    const capturedFingerprintData = "captured_fingerprint_data_here";
+    // Assuming 'fingerprintImage' is the base64 encoded image data you want to store in the database
+    const fingerprintImageBlob = await fetch(fingerprintImage).then(res => res.blob()); // Convert data URL to Blob
 
-    // Send a POST request to your backend API to store the captured fingerprint data
+    // Create a FormData object and append the fingerprint image blob and voterId
+    const formData = new FormData();
+    formData.append('voterId', voterId);
+    formData.append('fingerprintImage', fingerprintImageBlob, 'fingerprintImage.bmp'); // Use the correct filename extension for BMP format
+
+    // Send a POST request to your backend API to store the captured fingerprint data along with the voter ID
     try {
-      const response = await fetch('http://localhost:5000/api/fingerprint', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:5000/api/fingerprint', formData, {
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ fingerprintData: capturedFingerprintData })
+          'Content-Type': 'multipart/form-data'
+        }
       });
-      if (response.ok) {
-        console.log('Fingerprint data stored successfully');
-        // Navigate to the next page after storing the fingerprint data
-        navigate('/');
-      } else {
-        console.error('Failed to store fingerprint data');
-      }
+      console.log('Response from backend:', response.data.message);
+      navigate('/');
     } catch (error) {
-      console.error('Error storing fingerprint data:', error);
+      setRegistrationStatus('Failed to upload fingerprint image');
+      console.error('Failed to upload fingerprint image:', error.message);
     }
   };
 
@@ -65,13 +51,19 @@ const FingerRegister = () => {
       <Navbar />
       <div className="fingerprint-scanner-container">
         <h2 className="scanner-title">Fingerprint Scanner</h2>
-        <p className="scanner-message">{scanning ? "Please place your finger on the sensor..." : "Scan your fingerprint"}</p>
+        <input classname="folder" type="file" accept="image/*" onChange={handleUpload} />
         {fingerprintImage && <img src={fingerprintImage} alt="Fingerprint" className="fingerprint-image" />}
-        <button className={`scan-button ${scanning ? 'scanning' : ''}`} onClick={handleScan} disabled={scanning}>
-          {scanning ? "Scanning..." : "Scan Fingerprint"}
-        </button>
-        <br></br>
-        <button className={`scan-button ${scanning ? 'scanning' : ''}`} onClick={handleNextButtonClick}>
+        {registrationStatus && <p>{registrationStatus}</p>}
+        <label htmlFor="voterId" className="voterid">Voter ID:</label>
+        <input
+          type="text"
+          id="voterId"
+          value={voterId}
+          onChange={(e) => setVoterId(e.target.value)}
+          placeholder="Enter Voter ID"
+          className="voteridinput"
+        />
+        <button className="scan-button" onClick={handleNextButtonClick} disabled={!fingerprintImage || !voterId}>
           NEXT
         </button>
         <div ref={scannerRef}></div>
@@ -81,4 +73,3 @@ const FingerRegister = () => {
 };
 
 export default FingerRegister;
-

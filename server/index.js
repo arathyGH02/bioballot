@@ -8,6 +8,7 @@ const fs = require('fs');
 
 
 
+
 const app = express();
 
 mongoose.connect('mongodb://0.0.0.0/RegistrationDB', {
@@ -28,13 +29,18 @@ const voterSchema = new mongoose.Schema({
   legislativeassembly: String,
   voterid: String,
   password: String,
+  hasvoted: { type: Number, default: 0 },
   facialImage: {
     data: Buffer, // Store the image data as a base64-encoded string
     contentType: String
   },
     fingerprintImage: {
       data: Buffer,
-      contentType: String}
+      contentType: String},
+    VerifyFinger: {
+      data: Buffer,
+      contentType: String
+    }
 });
 
 const Voter = mongoose.model('Voter', voterSchema);
@@ -78,7 +84,7 @@ app.post('/register', async (req, res) => {
       console.log("already present")
       res.status(400).json({ message: 'Voter already registered' });
     }
-    const newVoter = new Voter({ ...req.body });
+    const newVoter = new Voter({ ...req.body, hasvoted: 0  });
 
 
     await newVoter.save();
@@ -90,6 +96,7 @@ app.post('/register', async (req, res) => {
 });
 
 const upload = multer({ dest: 'uploads/' });
+const newupload = multer({ dest: 'newuploads/' });
 
 app.post('/upload-facial-image', upload.single('facialImage'), async (req, res) => {
   try {
@@ -145,7 +152,7 @@ app.post('/verify-facial-image', upload.single('facialImage'), async (req, res) 
     const pythonProcess = spawn('python', ['server/image_comparison.py', base64ImageData]); 
     
     let similarityScore = null;
-    const similarityThreshold = 30;
+    const similarityThreshold = 15;
 
     // Handle output from the Python script
     pythonProcess.stdout.on('data', (data) => {
@@ -178,22 +185,103 @@ app.post('/verify-facial-image', upload.single('facialImage'), async (req, res) 
   }
 });
 
-// API endpoint to store the captured fingerprint data
-app.post('/api/fingerprint', async (req, res) => {
-  const { voterId, fingerprintData } = req.body;
+
+
+app.post('/api/fingerprint', upload.single('fingerprintImage'), async (req, res) => {
   try {
+    const { voterId } = req.body;
     const voter = await Voter.findOne({ voterid: voterId });
     if (!voter) {
       return res.status(404).json({ message: 'Voter not found' });
     }
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+    const fileData = req.file.path;
+    const contentType = req.file.mimetype;
 
-    voter.fingerprintImage.data = fingerprintData;
-    voter.fingerprintImage.contentType = 'image/bmp'; // Assuming the fingerprint data is in BMP format
+    // Assuming 'fingerprintImage' is a field in your voter schema to store the fingerprint image data and content type
+    voter.fingerprintImage.data = fileData;
+    voter.fingerprintImage.contentType = contentType;
+
     await voter.save();
-    res.status(200).json({ message: 'Fingerprint data stored successfully' });
+    console.log("successfully saved to database");
+    res.status(200).json({ message: 'Fingerprint image uploaded successfully' });
   } catch (error) {
-    console.error('Failed to store fingerprint data:', error.message);
-    res.status(500).json({ message: 'Failed to store fingerprint data' });
+    console.error('Failed to upload fingerprint image:', error.message);
+    res.status(500).json({ message: 'Failed to upload fingerprint image' });
+  }
+});
+
+
+
+  app.post('/api/verify-fingerprint', upload.single('fingerprintImage'), async (req, res) => {
+    try {
+      console.log("request received");
+      const { voterId } = req.body;
+      const voter = await Voter.findOne({ voterid: voterId });
+      if (!voter) {
+        return res.status(404).json({ message: 'Voter not found' });
+      }
+  
+      console.log('Received voter ID:', voterId);
+  
+      if (!voter.fingerprintImage || !voter.fingerprintImage.data) {
+        console.log("Fingerprint data not found for voter")
+        return res.status(400).json({ message: 'Fingerprint data not found for voter' });
+      }
+
+      const fileData = req.file.path;
+      const contentType = req.file.mimetype;
+
+    // Assuming 'fingerprintImage' is a field in your voter schema to store the fingerprint image data and content type
+    voter.VerifyFinger.data = fileData;
+    voter.VerifyFinger.contentType = contentType;
+
+    await voter.save();
+      // Convert the stored image data to base64
+      const base64ImageData1 = voter.fingerprintImage.data.toString('base64');
+      console.log("converted")
+      console.log(base64ImageData1)
+
+      const base64ImageData2 = voter.VerifyFinger.data.toString('base64');
+      console.log("converted")
+      console.log(base64ImageData2)
+  
+      // Spawn a Python process
+      const pythonProcess = spawn('python', ['server/fingerprint_comparison.py', base64ImageData1, base64ImageData2]); 
+  
+      // Rest of your code remains the same
+    let similarityScore = null;
+    const similarityThreshold = 45;
+
+    // Handle output from the Python script
+    pythonProcess.stdout.on('data', (data) => {
+      similarityScore = parseInt(data.toString().trim());
+    });
+
+    // Handle errors
+    pythonProcess.stderr.on('data', (data) => {
+      console.error(`Python script stderr: ${data}`);
+    });
+
+    // Handle process exit
+    pythonProcess.on('close', (code) => {
+      if (!isNaN(similarityScore)) {
+        console.log(`Python script exited with code ${code}`);
+        console.log(`Similarity Score: ${similarityScore}`);
+        if (similarityScore > similarityThreshold) {
+          res.status(200).json({ message: 'Fingerprint verified' });
+          console.log("Fingerprint verified");
+        } else {
+          res.status(400).json({ message: 'Fingerprint not verified' });
+          console.log("Fingerprint not verified");
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Failed to verify fingerprint:', error.message);
+    res.status(500).json({ message: 'Failed to verify fingerprint' });
   }
 });
 
@@ -300,8 +388,18 @@ app.get('/api/:electionId/add-candidate', async (req, res) => {
 });
 
 app.post('/api/submit-vote', async (req, res) => {
-  const { electionId, candidateId } = req.body;
+  const { electionId, candidateId, voterId } = req.body;
   try {
+    // Check if the voter has already voted
+    const voter = await Voter.findOne({ voterid: voterId });
+    if (!voter) {
+      return res.status(404).json({ error: 'Voter not found' });
+    }
+    if (voter.hasvoted === 1) {
+      return res.status(400).json({ error: 'Voter has already casted their vote' });
+    }
+
+    // Update the candidate's vote count
     const candidate = await Candidate.findOneAndUpdate(
       { _id: candidateId, electionid: electionId },
       { $inc: { votes: 1 } }, // Increment the votes count by 1
@@ -310,6 +408,10 @@ app.post('/api/submit-vote', async (req, res) => {
     if (!candidate) {
       return res.status(404).json({ error: 'Candidate not found' });
     }
+
+    // Update the voter's hasvoted flag
+    await Voter.updateOne({ voterid: voterId }, { hasvoted: 1 });
+
     res.status(200).json({ message: 'Vote submitted successfully' });
   } catch (error) {
     console.error('Error submitting vote:', error.message);

@@ -1,0 +1,90 @@
+app.post('/api/verify-fingerprint', async (req, res) => {
+  try {
+    const { voterId, fingerprintData } = req.body;
+    const voter = await Voter.findOne({ voterid: voterId });
+    if (!voter) {
+      return res.status(404).json({ message: 'Voter not found' });
+    }
+    // Retrieve the already registered fingerprint for the same voter ID
+    const registeredFingerprintData = voter.fingerprintImage.data.toString('base64');
+    console.log("registered data retreived")
+
+    // Send an HTTP POST request to your Python script
+    const response = await axios.post('http://127.0.0.1:8000/verify-fingerprint', {
+      fingerprintData: fingerprintData,
+      registeredFingerprintData: registeredFingerprintData
+    });
+
+    console.log('Python script response:', response.data);
+
+    if (response.data.matchScore > 50) {
+      console.log('User verified');
+    } else {
+      console.log('User not verified');
+    }
+
+    res.status(200).json({ message: 'Fingerprint verification request sent' });
+  } catch (error) {
+    console.error('Failed to send fingerprint verification request:', error.message);
+    res.status(500).json({ message: 'Failed to send fingerprint verification request' });
+  }
+});
+
+
+from flask import Flask, request, jsonify
+import base64
+import cv2
+import numpy as np
+import sys
+
+app = Flask(__name__)
+
+def base64_to_image(base64_string):
+    decoded_data = base64.b64decode(base64_string)
+    np_data = np.frombuffer(decoded_data, np.uint8)
+    image = cv2.imdecode(np_data, cv2.IMREAD_COLOR)
+    return image
+
+def match_images(base64_image_1, base64_image_2):
+    image_1 = base64_to_image(base64_image_1)
+    image_2 = base64_to_image(base64_image_2)
+
+    sift = cv2.SIFT_create()
+
+    keypoints_1, descriptors_1 = sift.detectAndCompute(image_1, None)
+    keypoints_2, descriptors_2 = sift.detectAndCompute(image_2, None)
+
+    if descriptors_1 is None or descriptors_2 is None:
+        print("Error: Failed to extract descriptors.")
+        return None
+
+    matcher = cv2.BFMatcher()
+    matches = matcher.knnMatch(descriptors_1, descriptors_2, k=2)
+
+    match_points = []
+    for p, q in matches:
+        if p.distance < 0.1 * q.distance:
+            match_points.append(p)
+
+    keypoints = min(len(keypoints_1), len(keypoints_2))
+    match_score = len(match_points) / keypoints * 100
+    return match_score
+
+@app.route('/verify-fingerprint', methods=['POST'])
+def verify_fingerprint():
+    data = request.get_json()
+    fingerprint_data = data['fingerprintData']
+    registered_fingerprint_data = data['registeredFingerprintData']
+
+    # Assuming you have the registered fingerprint data stored somewhere
+    
+
+    match_score = match_images(fingerprint_data, registered_fingerprint_data)
+
+   
+    print(f'Match Score: {match_score}')
+
+    return jsonify({'message': 'Fingerprint verification request received', 'matchScore': match_score})
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=8000)

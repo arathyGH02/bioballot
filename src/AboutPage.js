@@ -9,7 +9,7 @@ const AboutPage = () => {
       <Navbar /> {/* Use the Navbar component */}
       
       <div className='container'>
-      <h2>About Us</h2>
+      <h2>Guidelines</h2>
       <p>
       Welcome to BioBallot, your trusted online voting platform. Below are guidelines and steps to follow: 
       </p>
@@ -55,7 +55,7 @@ const AboutPage = () => {
 </p>
 <br></br>
 
-<div className="heading">Guidelines</div>
+<div className="heading">General Instructions</div>
 <p className='paragraph'>
 
 <ol>

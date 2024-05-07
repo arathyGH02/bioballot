@@ -1,97 +1,107 @@
 /* FacialRecognition.css */
 
 .facial-recognition-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 50px;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .recognition-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .recognition-message {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .facial-image {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
+  /*.capture-button,
+  .next-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+  }
+  
+  .capture-button:hover,
+  .next-button:hover {
+    background-color: #0056b3;
+  }
+  .next-button.scanning{
+    background-color: #dc3545;
+  }*/
 
-.recognition-title {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.recognition-message {
-  font-size: 18px;
-  color: #666;
-  margin-bottom: 20px;
-}
-
-.facial-image {
-  width: 150px;
-  height: auto;
-  margin-bottom: 20px;
-}
-
-/*.capture-button,
-.next-button {
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 15px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 20px;
-}
-
-.capture-button:hover,
-.next-button:hover {
-  background-color: #0056b3;
-}
-.next-button.scanning{
-  background-color: #dc3545;
-}*/
-
-/*.scan-button {
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.scan-button.scanning {
-  background-color: #dc3545; /* Change button color when scanning */
+  /*.scan-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .scan-button.scanning {
+    background-color: #dc3545; /* Change button color when scanning */
 /*  }
-
-.scan-button:hover {
-  background-color: #0056b3;
-}*/
-.capture-button,
+  
+  .scan-button:hover {
+    background-color: #0056b3;
+  }*/
+  .capture-button,
 .next-button {
-font-size: 16px;
-padding: 10px 20px;
-margin-top: 10px;
-cursor: pointer;
-border: none;
-border-radius: 5px;
+  font-size: 16px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
 }
 
 .capture-button {
-background-color:  #007bff; /* Green color */
-color: white;
+  background-color:  #007bff; /* Green color */
+  color: white;
 }
 
 .capture-button.capturing {
-background-color:  #dc3545; /* Orange color while capturing */
+  background-color:  #dc3545; /* Orange color while capturing */
 }
 
 .capture-button.captured {
-background-color:  #007bff; /* Blue color when captured */
+  background-color:  #007bff; /* Blue color when captured */
 }
 
 .next-button {
-background-color:  #007bff; /* Blue color */
-color: white;
+  background-color:  #007bff; /* Blue color */
+  color: white;
 }
 
 .next-button.captured {
-background-color: #4caf50; /* Green color when facial image is captured */
+  background-color: #4caf50; /* Green color when facial image is captured */
+}
+.verify-button{
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }

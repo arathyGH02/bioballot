@@ -41,7 +41,7 @@
     margin-left: 500px;
 
     background-color:#1e68c2 ;
-    color: #d3d8d3;
+    color: #ffffff;
     padding: 12px 20px;
     border: none;
     cursor: pointer;
@@ -53,9 +53,9 @@
 }
 .button3{
   display: block;
-    margin-left: 500px;
+    margin-left: 12px;
     background-color:#1e68c2 ;
-    color: #d3d8d3;
+    color: #ffffff;
     padding: 12px 20px;
     border: none;
     cursor: pointer;
@@ -63,6 +63,7 @@
     border-radius: 15px;
     width: 100px;
     grid-column: span 2;
+    text-decoration: none;
     align-items: center;
 }
 

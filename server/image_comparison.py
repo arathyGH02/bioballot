@@ -28,7 +28,10 @@ def compare_images(encoded_image_data):
         cap = cv2.VideoCapture(0)
         ret, frame = cap.read()
         cap.release()
-   
+        
+        cv2.imshow('Captured Image', frame)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         # Convert the real-time captured image to grayscale
         gray2 = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 

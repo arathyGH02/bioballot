@@ -15,16 +15,21 @@ const FacialRecognition = () => {
       try {
         const response = await axios.post('http://localhost:5000/verify-facial-image', { voterId });
         if (response.status === 200) {
+          
+          window.alert('Facial image verified successfully'); // Display alert for successful verification
           navigate('/election-page'); // Update to the actual path of your ElectionPage
        } else if(response.status === 400) {
           setErrorMessage('Failed to verify facial image. Please try again.');
+          window.alert('Failed to verify facial image. Please try again.'); // Display alert for failed verification
         }
       } catch (error) {
         console.error('Failed to verify facial image:', error.message);
         setErrorMessage('Failed to verify facial image. Please try again.');
+        window.alert('Failed to verify facial image. Please try again.'); // Display alert for failed verification
       }
     }
   };
+
 
   return (
     <div>

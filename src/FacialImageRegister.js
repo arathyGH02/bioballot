@@ -1,5 +1,3 @@
-//FacialImageRegister.js
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
@@ -11,6 +9,7 @@ const FacialRegister = () => {
   const [voterId, setVoterId] = useState('');
   const [facialImage, setFacialImage] = useState(null);
   const [capturing, setCapturing] = useState(false);
+  const [registrationStatus, setRegistrationStatus] = useState('');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -57,36 +56,34 @@ const FacialRegister = () => {
     // Set capturing to false after capturing the image
     setCapturing(false);
   };
-  
 
-  const handleNextButtonClick = () => {
+  const handleNextButtonClick = async () => {
     // Send the facial image and voter ID to the backend and navigate to the next page
     if (facialImage && voterId) {
-      sendFacialImageToBackend(facialImage, voterId);
-      navigate('/finger-register'); // Update to the actual path of your ElectionPage
+      try {
+        await sendFacialImageToBackend(facialImage, voterId);
+        navigate('/finger-register'); // Update to the actual path of your ElectionPage
+      } catch (error) {
+        setRegistrationStatus('Failed to register image');
+        console.error('Failed to upload facial image:', error.message);
+      }
     }
   };
 
   const sendFacialImageToBackend = async (image, voterId) => {
-    try {
-      const blob = await fetch(image).then((res) => res.blob()); // Convert data URL to Blob
-      const formData = new FormData();
-      formData.append('voterId', voterId);
-      formData.append('facialImage', blob, 'facialImage.jpg'); // Use a proper filename for the image
-  
-      const response = await axios.post('http://localhost:5000/upload-facial-image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });     
-  
-      console.log('Response from backend:', response.data.message);
-    } catch (error) {
-      console.error('Failed to upload facial image:', error.message);
-    }
+    const blob = await fetch(image).then((res) => res.blob()); // Convert data URL to Blob
+    const formData = new FormData();
+    formData.append('voterId', voterId);
+    formData.append('facialImage', blob, 'facialImage.jpg'); // Use a proper filename for the image
+
+    const response = await axios.post('http://localhost:5000/upload-facial-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    console.log('Response from backend:', response.data.message);
   };
-  
-  
 
   return (
     <div>
@@ -95,6 +92,7 @@ const FacialRegister = () => {
         <h2 className="recognition-title">Facial Recognition</h2>
         <p className="recognition-message">{capturing ? "Capturing facial image..." : facialImage ? "Facial image captured!" : "Capture your facial image for verification"}</p>
         {facialImage && <img src={facialImage} alt="Facial Recognition" className="facial-image" />}
+        {registrationStatus && <p>{registrationStatus}</p>}
         <video ref={videoRef} style={{ display: capturing ? 'block' : 'none' }} />
 
         {!facialImage && !capturing &&
